@@ -78,3 +78,66 @@
                     </div>
                     <div class="ml-5 w-0 flex-1">
                         <dl>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Completion Rate</dt>
+                            <dd>
+                                <div class="text-lg font-medium text-gray-900" id="completionRate">0%</div>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 px-4 sm:px-0">
+        <!-- Grade Distribution -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Grade Distribution</h3>
+            <div class="h-64">
+                <canvas id="gradeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Email Sent History -->
+        <div class="bg-white shadow rounded-lg p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Email Sent History (Last 7 Days)</h3>
+            <div class="h-64">
+                <canvas id="emailHistoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity & Subject Stats -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 sm:px-0">
+        <!-- Recent Activity -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Recent Activity</h3>
+            </div>
+            <div class="p-6">
+                <div id="recentActivity" class="space-y-4">
+                    <!-- Activity items will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject Statistics -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Subject Statistics</h3>
+            </div>
+            <div class="p-6">
+                <div id="subjectStats" class="space-y-4">
+                    <!-- Subject stats will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}
