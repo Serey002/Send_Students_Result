@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Student Result System{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-graduation-cap text-2xl text-primary-600 mr-3"></i>
+                        <span class="text-xl font-bold text-gray-900">EduResults</span>
+                    </div>
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="{{ url_for('dashboard') }}" 
+                           class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                            <i class="fas fa-chart-line mr-2"></i>Dashboard
+                        </a>
+                        <a href="{{ url_for('upload_page') }}" 
+                           class="nav-link {% if request.endpoint == 'upload_page' %}active{% endif %}">
+                            <i class="fas fa-upload mr-2"></i>Upload
+                        </a>
+                        <a href="{{ url_for('logs_page') }}" 
+                           class="nav-link {% if request.endpoint == 'logs_page' %}active{% endif %}">
+                            <i class="fas fa-history mr-2"></i>Logs
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <div class="md:hidden bg-white border-b">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="{{ url_for('dashboard') }}" 
+               class="mobile-nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                <i class="fas fa-chart-line mr-2"></i>Dashboard
+            </a>
+            <a href="{{ url_for('upload_page') }}" 
+               class="mobile-nav-link {% if request.endpoint == 'upload_page' %}active{% endif %}">
+                <i class="fas fa-upload mr-2"></i>Upload
+            </a>
+            <a href="{{ url_for('logs_page') }}" 
+               class="mobile-nav-link {% if request.endpoint == 'logs_page' %}active{% endif %}">
+                <i class="fas fa-history mr-2"></i>Logs
+            </a>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Notification System -->
+    <div id="notification" class="fixed top-4 right-4 z-50 max-w-sm w-full hidden">
+        <div class="bg-white rounded-lg shadow-lg border-l-4 p-4 transform transition-all duration-300 ease-in-out">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i id="notificationIcon" class="text-xl"></i>
+                </div>
+                <div class="ml-3 w-0 flex-1 pt-0.5">
+                    <h3 id="notificationTitle" class="text-sm font-medium text-gray-900"></h3>
+                    <p id="notificationMessage" class="mt-1 text-sm text-gray-500"></p>
+                </div>
+                <div class="ml-4 flex-shrink-0 flex">
+                    <button onclick="hideNotification()" class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
+            <div class="flex items-center justify-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            </div>
+            <p class="mt-4 text-center text-gray-600" id="loadingText">Processing...</p>
+        </div>
+    </div>
+
+    <script>
+        // Notification system
+        function showNotification(type, title, message, duration = 5000) {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            
+            const styles = {
+                success: { color: 'text-green-400', border: 'border-green-400', icon: 'fas fa-check-circle' },
+                error: { color: 'text-red-400', border: 'border-red-400', icon: 'fas fa-exclamation-circle' },
+                warning: { color: 'text-yellow-400', border: 'border-yellow-400', icon: 'fas fa-exclamation-triangle' },
+                info: { color: 'text-blue-400', border: 'border-blue-400', icon: 'fas fa-info-circle' }
+            };
+            
+            const style = styles[type] || styles.info;
+            
+            notification.className = `fixed top-4 right-4 z-50 max-w-sm w-full transform transition-all duration-300 ease-in-out border-l-4 ${style.border}`;
+            icon.className = `${style.color} ${style.icon}`;
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            notification.classList.remove('hidden');
+            
+            if (duration > 0) {
+                setTimeout(hideNotification, duration);
+            }
+        }
+        
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('hidden');
+        }
+        
+        // Loading system
+        function showLoading(text = 'Processing...') {
+            const overlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            loadingText.textContent = text;
+            overlay.classList.remove('hidden');
+        }
+        
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.classList.add('hidden');
+        }
+        
+        // Utility functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
