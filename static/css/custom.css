@@ -1,0 +1,112 @@
+/* Custom styles for enhanced UI */
+
+.nav-link {
+    @apply inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium;
+    border-color: transparent;
+    color: #6b7280;
+}
+
+.nav-link:hover {
+    @apply border-gray-300 text-gray-700;
+}
+
+.nav-link.active {
+    @apply border-primary-500 text-gray-900;
+}
+
+.mobile-nav-link {
+    @apply block pl-3 pr-4 py-2 border-l-4 text-base font-medium;
+    border-color: transparent;
+    color: #6b7280;
+}
+
+.mobile-nav-link:hover {
+    @apply border-gray-300 text-gray-700;
+}
+
+.mobile-nav-link.active {
+    @apply border-primary-500 text-gray-900;
+}
+
+/* Smooth transitions */
+* {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* File upload area enhancements */
+#uploadArea {
+    transition: all 0.3s ease;
+}
+
+#uploadArea.dragover {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+    transform: scale(1.02);
+}
+
+/* Table enhancements */
+table {
+    border-spacing: 0;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background: #f9fafb;
+    z-index: 10;
+}
+
+/* Notification animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+#notification {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Grade color coding */
+.grade-A { color: #10B981; }
+.grade-B { color: #3B82F6; }
+.grade-C { color: #F59E0B; }
+.grade-D { color: #F97316; }
+.grade-F { color: #EF4444; }
