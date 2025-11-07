@@ -29,7 +29,7 @@ A Flask-based web application for managing and distributing student results via 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Send_Students_Result.git
+   git clone https://github.com/Serey002/Send_Students_Result.git
    cd Send_Students_Result
    ```
 
