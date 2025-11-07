@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}View Results - Student Result System{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Student Results</h1>
+            <p class="text-gray-600 mt-2">View all student results stored in the system</p>
+        </div>
+        <div class="flex space-x-3">
+            <a href="{{ url_for('upload_file') }}" 
+               class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center">
+                <i class="fas fa-upload mr-2"></i>
+                Upload New
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <div class="flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900">
+                All Student Results ({{ students.total }} records)
+            </h3>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-500">
+                    Page {{ students.page }} of {{ students.pages }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subjects</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Added</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for student in students.items %}
+                <tr class="hover:bg-gray-50 transition duration-150">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                <span class="text-white font-medium text-sm">
+                                    {{ student.first_name[0] }}{{ student.last_name[0] }}
+                                </span>
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">
+                                    {{ student.first_name }} {{ student.last_name }}
+                                </div>
+                                <div class="text-sm text-gray-500">{{ student.student_id }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ student.class_name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ student.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div class="text-xs">
+                            <div>Eng: {{ student.final_english }}</div>
+                            <div>PL: {{ student.final_pl }}</div>
+                            <div>Algo: {{ student.final_algorithm }}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ student.total }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if student.grade == 'A' %}bg-green-100 text-green-800
+                                    {% elif student.grade == 'B' %}bg-blue-100 text-blue-800
+                                    {% elif student.grade == 'C' %}bg-yellow-100 text-yellow-800
+                                    {% elif student.grade == 'D' %}bg-orange-100 text-orange-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                            {{ student.grade }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ student.created_at.strftime('%Y-%m-%d') }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if students.pages > 1 %}
+    <div class="px-6 py-4 border-t border-gray-200">
+        <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-700">
+                Showing {{ students.items|length }} of {{ students.total }} results
+            </div>
+            <div class="flex space-x-2">
+                {% if students.has_prev %}
+                <a href="{{ url_for('view_results', page=students.prev_num) }}" 
+                   class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    Previous
+                </a>
+                {% endif %}
+                
+                {% for page_num in students.iter_pages() %}
+                    {% if page_num %}
+                        {% if page_num == students.page %}
+                        <span class="px-3 py-1 border border-blue-500 bg-blue-500 text-white rounded-md text-sm font-medium">
+                            {{ page_num }}
+                        </span>
+                        {% else %}
+                        <a href="{{ url_for('view_results', page=page_num) }}" 
+                           class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            {{ page_num }}
+                        </a>
+                        {% endif %}
+                    {% else %}
+                        <span class="px-3 py-1 text-gray-500">...</span>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if students.has_next %}
+                <a href="{{ url_for('view_results', page=students.next_num) }}" 
+                   class="px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    Next
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
