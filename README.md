@@ -157,4 +157,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, please open an issue on the [GitHub repository](https://github.com/yourusername/Send_Students_Result/issues).
+For support, please open an issue on the [GitHub repository](https://github.com/Serey002/Send_Students_Result/issues).
