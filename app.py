@@ -121,7 +121,7 @@ def generate_email_template(student_data):
                     </tr>
                     <tr><td>Final English</td><td>{student_data['final_english']}</td></tr>
                     <tr><td>Final English IT</td><td>{student_data['final_english_it']}</td></tr>
-                    <tr><td>Final Programming Language</td><td>{student_data['final_pl']}</td></tr>
+                    <tr><td>Final Professional Life</td><td>{student_data['final_pl']}</td></tr>
                     <tr><td>Final Algorithm</td><td>{student_data['final_algorithm']}</td></tr>
                     <tr><td>Final Web Design</td><td>{student_data['final_web_design']}</td></tr>
                     <tr><td>Final Git</td><td>{student_data['final_git']}</td></tr>
@@ -140,7 +140,7 @@ def generate_email_template(student_data):
                 
                 <p>If you have any questions or concerns about your results, please don't hesitate to contact your academic advisor.</p>
                 
-                <p>Best regards,<br>Academic Department</p>
+                <p>Best regards,<br>Academic Department of Passerelles Numeriques</p>
             </div>
         </div>
     </body>
