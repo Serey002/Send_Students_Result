@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify, flash, redirect, url_for, send_file, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
-import pandas as pd
 import os
 import json
 from datetime import datetime
@@ -175,6 +174,9 @@ def upload_file():
         
         if file and allowed_file(file.filename):
             try:
+                # Import pandas locally to avoid requiring it at app startup
+                import pandas as pd
+
                 # Read file
                 if file.filename.endswith('.csv'):
                     df = pd.read_csv(file)
@@ -366,6 +368,9 @@ def export_logs():
             'Batch ID': log.batch_id
         })
     
+    # Import pandas locally to avoid requiring it at app startup
+    import pandas as pd
+
     df = pd.DataFrame(data)
     output = BytesIO()
     df.to_csv(output, index=False)
